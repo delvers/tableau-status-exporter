@@ -1,0 +1,16 @@
+[Unit]
+Description=Tableau Status Exporter
+After=network.target
+
+[Service]
+Type=simple
+UMask=0007
+User=tableau
+Group=tableau
+ExecStart=/bin/python2 /opt/tableau/tableau-status-exporter/executable/main.py --config-file /opt/tableau/tableau-status-exporter/config.yml
+Restart=always
+TimeoutStopSec=10s
+RestartPreventExitStatus=SIGKILL
+
+[Install]
+WantedBy=default.target
