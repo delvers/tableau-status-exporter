@@ -23,21 +23,24 @@ class TokenManager(object):
         self.host = host
 
     def _setup(self):
-        body = {}
-        body['credentials'] = self._creds
-        try:
-            r = requests.post('{host}/api/{api_version}/auth/signin'
-                .format(host=self.host, api_version=self._api_version), json = body)
-            r.raise_for_status()
-        except requests.exceptions.RequestException as e:
-            logger.exception("Failed to log in: {}".format(e))
-            raise e
-        xml_response = ET.fromstring(r.text)
-        if 'token' not in xml_response[0].attrib:
-            raise ValueError('Login to Tableau server failed. XML response: {}'
-                .format(r.text))
-        self._token = xml_response[0].attrib['token']
-        logger.info('New token obtained')
+        if self._creds['name'] != '':
+            body = {}
+            body['credentials'] = self._creds
+            try:
+                r = requests.post('{host}/api/{api_version}/auth/signin'
+                    .format(host=self.host, api_version=self._api_version), json = body)
+                r.raise_for_status()
+            except requests.exceptions.RequestException as e:
+                logger.exception("Failed to log in: {}".format(e))
+                raise e
+            xml_response = ET.fromstring(r.text)
+            if 'token' not in xml_response[0].attrib:
+                raise ValueError('Login to Tableau server failed. XML response: {}'
+                    .format(r.text))
+            self._token = xml_response[0].attrib['token']
+            logger.info('New token obtained')
+        else:
+            logger.info('No authentication is used')
 
     @property
     def token(self):
