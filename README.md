@@ -26,6 +26,14 @@ Reads and parses the /admin/systeminfo.xml page and exports the number of proces
 3. Start the exporter with `python <path_to_project>/executable/main.py --config-file <path_to_config_yml>`
 4. Go to `<hostname_of_exporter>:<exporter_port>/metrics` to see the metrics.
 
+## Using the exporter without credentials
+It is possible to use the exporter without credentials. To do so add the exporter ip address to the allowed addresse via the tsm:
+```
+tsm configuration set -k wgserver.systeminfo.allow_referrer_ips -v <exporter_ip>,127.0.0.1
+tsm pending-changes apply
+```
+You also have to configure the tableau-status-exporter with an empty tableau_user.
+
 Example output:
 ```
 # HELP tableau_server_process_status Process status
